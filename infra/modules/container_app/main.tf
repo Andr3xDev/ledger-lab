@@ -75,11 +75,10 @@ resource "azurerm_container_app" "this" {
   }
 
   dynamic "secret" {
-    for_each = var.secret_ids
+    for_each = nonsensitive(toset(keys(var.secrets)))
     content {
-      name                = secret.key
-      key_vault_secret_id = secret.value
-      identity            = azurerm_user_assigned_identity.app.id
+      name  = secret.value
+      value = var.secrets[secret.value]
     }
   }
 

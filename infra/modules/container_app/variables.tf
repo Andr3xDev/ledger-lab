@@ -23,13 +23,14 @@ variable "key_vault_id" {
   type        = string
 }
 
-variable "secret_ids" {
-  description = "Debe incluir database-url y jwt-secret."
+variable "secrets" {
+  description = "Valores de los secretos de la app. Debe incluir database-url y jwt-secret."
   type        = map(string)
+  sensitive   = true
 
   validation {
-    condition     = alltrue([for name in ["database-url", "jwt-secret"] : contains(keys(var.secret_ids), name)])
-    error_message = "secret_ids debe incluir database-url y jwt-secret."
+    condition     = alltrue([for name in ["database-url", "jwt-secret"] : contains(keys(var.secrets), name)])
+    error_message = "secrets debe incluir database-url y jwt-secret."
   }
 }
 
