@@ -83,11 +83,15 @@ module "app" {
   location              = azurerm_resource_group.this.location
   image                 = var.image
   key_vault_id          = module.key_vault.id
-  secret_ids            = module.key_vault.secret_ids
   max_replicas          = var.max_replicas
   logs_enabled          = local.is_prod
   rbac_propagation_wait = var.rbac_propagation_wait
   tags                  = local.tags
+
+  secrets = {
+    "database-url" = module.database.database_url
+    "jwt-secret"   = random_password.jwt.result
+  }
 
   environment_variables = {
     APP_ENV     = var.environment
